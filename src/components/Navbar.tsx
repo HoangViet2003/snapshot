@@ -281,6 +281,38 @@ export default function Navbar({
         </div>
       </motion.nav>
 
+      {/* ── Secondary gallery nav (desktop only) ── */}
+      {galleryLinks.length > 0 && (
+        <motion.div
+          variants={{
+            visible: { y: 0, opacity: 1, pointerEvents: 'auto' as const },
+            hidden: { y: -100, opacity: 0, pointerEvents: 'none' as const },
+          }}
+          initial="visible"
+          animate={manualHidden && !isMenuOpen ? 'hidden' : 'visible'}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className={`fixed inset-x-0 top-17.5 z-99 hidden lg:block transition-colors duration-300 border-t ${
+            showSolid
+              ? 'bg-white/95 backdrop-blur-md border-black/8'
+              : 'bg-transparent border-white/15'
+          }`}
+        >
+          <div className="mx-auto flex h-9 max-w-420 items-center justify-start gap-10 px-16">
+            {galleryLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`text-[9px] font-semibold uppercase tracking-[0.32em] transition-all hover:opacity-100 whitespace-nowrap ${textColor} ${
+                  pathname.startsWith(link.href) ? 'opacity-100' : 'opacity-40'
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       {/* Mobile menu */}
       <AnimatePresence>
         {isMenuOpen && (

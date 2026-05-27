@@ -55,6 +55,9 @@
     "viewMore": "View More"
   },
   "NiceWords": {
+    "sectionLabel": "Client Stories",
+    "sectionTitle": "Kind Words",
+    "storiesLabel": "Stories",
     "testimonials": [
       {
         "category": "Nice words",
@@ -99,6 +102,11 @@
     "mediaKit": "Media kit",
     "bookHeading": "Book a Session",
     "bookSubtitle": "Get started for free. Add your whole team as your needs grow.",
+    "ctaLabel": "Ready to create memories?",
+    "ctaHeading": "Let's capture your story.",
+    "pagesLabel": "Pages",
+    "followLabel": "Follow",
+    "findUsLabel": "Find Us",
     "bookToday": "Book today",
     "languageLabel": "English",
     "terms": "Terms & privacy",

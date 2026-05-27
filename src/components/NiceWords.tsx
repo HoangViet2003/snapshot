@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 const testimonialImages = [
@@ -12,160 +13,188 @@ const testimonialImages = [
   'https://fixteamstudio.com/wp-content/uploads/2023/06/ql.jpg',
 ];
 
-const testimonialEmojis = ['❤️', '✨', '🌿', '🤍'];
-
 export default function NiceWords() {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const t = useTranslations('NiceWords');
+  const [pairIndex, setPairIndex] = useState(0);
+  const [slideDir, setSlideDir] = useState(1);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const testimonials = (t.raw('testimonials') as Array<{ category: string; quote: string; author: string }>).map(
-    (item, i) => ({ ...item, image: testimonialImages[i], color: testimonialEmojis[i] })
+    (item, i) => ({ ...item, image: testimonialImages[i] })
   );
 
-  const nextTestimonial = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  const totalPairs = Math.ceil(testimonials.length / 2);
+  const visiblePair = [
+    testimonials[pairIndex * 2],
+    testimonials[pairIndex * 2 + 1],
+  ].filter(Boolean);
+
+  const goTo = (index: number) => {
+    setSlideDir(index > pairIndex ? 1 : -1);
+    setPairIndex(index);
+    setHoveredIndex(null);
   };
 
-  const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  const prev = () => goTo((pairIndex - 1 + totalPairs) % totalPairs);
+  const next = () => goTo((pairIndex + 1) % totalPairs);
 
-  const current = testimonials[currentIndex];
 
   return (
-    <section className="relative overflow-hidden bg-black text-white px-14 pb-20 lg:pb-32">
-      <div className="max-w-[1680px] ml-0 text-left">
-        <div className="grid grid-cols-1 items-start lg:grid-cols-[0.5fr_0.5fr]">
-          <div className="flex flex-col  pb-16  lg:pb-20 ">
-            <div className="mb-8 block lg:hidden">
-              <AnimatePresence mode="wait">
-                <motion.h2
-                  key={currentIndex}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: 'clamp(2rem, 6vw, 3.2rem)',
-                    fontWeight: 200,
-                    lineHeight: 1.1,
-                  }}
-                >
-                  {current.category}
-                </motion.h2>
-              </AnimatePresence>
-            </div>
+    <section className="bg-[#0e0e0e] text-white overflow-hidden py-20 md:py-28 px-8 md:px-14 lg:px-20">
 
-            <div className="relative overflow-hidden" style={{ aspectRatio: '1.62' }}>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentIndex}
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.05 }}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative h-full w-full"
-                >
-                  <Image
-                    src={current.image}
-                    alt={current.author}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 92vw, 50vw"
-                  />
-                </motion.div>
-              </AnimatePresence>
-            </div>
+      {/* ── Header ──────────────────────────────────────────── */}
+      <div className="flex items-end justify-between mb-12">
+        <div>
+          <p className="text-[0.58rem] uppercase tracking-[0.45em] text-white/30 mb-2">
+            {t('sectionLabel')}
+          </p>
+          <h2
+            className="text-3xl md:text-4xl font-light leading-none"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            {t('sectionTitle')}
+          </h2>
+        </div>
 
-            <div className="flex items-center justify-center gap-14 py-8 text-white/90">
-              <button
-                type="button"
-                onClick={prevTestimonial}
-                aria-label="Previous testimonial"
-                className="text-3xl transition-transform duration-300 hover:-translate-x-2 p-4 cursor-pointer"
-              >
-                &#8249;
-              </button>
-              <span className="block h-[72px] w-px bg-white/70 rotate-[-25deg]" />
-              <button
-                type="button"
-                onClick={nextTestimonial}
-                aria-label="Next testimonial"
-                className="text-3xl transition-transform duration-300 hover:translate-x-2 p-4 cursor-pointer"
-              >
-                &#8250;
-              </button>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <div className="hidden lg:block lg:pl-72 lg:pt-4 lg:pb-14">
-              <AnimatePresence mode="wait">
-                <motion.h2
-                  key={currentIndex}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -24 }}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: 'clamp(2.2rem, 4vw, 3.8rem)',
-                    fontWeight: 400,
-                    lineHeight: 1.1,
-                  }}
-                >
-                  {current.category}
-                </motion.h2>
-              </AnimatePresence>
-            </div>
-
-            <div className="relative lg:pt-0">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentIndex}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative bg-white px-10 py-18 text-black shadow-[0_28px_70px_rgba(0,0,0,0.18)] sm:px-16 sm:py-22  lg:px-18 lg:py-24"
-                >
-                  <div
-                    className="mb-10 text-center leading-none text-black/80"
-                    style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: '3.5rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    &ldquo;
-                  </div>
-
-                  <div className="mx-auto max-w-[580px]">
-                    <p
-                      className="text-center leading-[1.85] text-black/85 min-h-[140px]"
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        fontSize: 'clamp(0.95rem, 1.1vw, 1.08rem)',
-                      }}
-                    >
-                      {current.quote}
-                    </p>
-
-                    <div className="mt-8 text-left text-lg opacity-80">{current.color}</div>
-
-                    <p
-                      className="mt-12 text-center font-bold uppercase tracking-[0.52em] text-black/80"
-                      style={{ fontSize: '0.75rem' }}
-                    >
-                      - {current.author}
-                    </p>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
+        {/* Arrows + counter */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={prev}
+            className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer"
+            aria-label="Previous"
+          >
+            <ChevronLeft size={18} strokeWidth={1.5} />
+          </button>
+          <span className="text-[0.6rem] tracking-[0.3em] text-white/25 tabular-nums px-1">
+            {String(pairIndex + 1).padStart(2, '0')} / {String(totalPairs).padStart(2, '0')}
+          </span>
+          <button
+            onClick={next}
+            className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer"
+            aria-label="Next"
+          >
+            <ChevronRight size={18} strokeWidth={1.5} />
+          </button>
         </div>
       </div>
+
+      {/* ── Cards ───────────────────────────────────────────── */}
+      <div className="overflow-hidden">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={pairIndex}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4"
+            initial={{ x: slideDir * 80, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -slideDir * 80, opacity: 0 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {visiblePair.map((item, i) => {
+              const globalIndex = pairIndex * 2 + i;
+              const isHovered = hoveredIndex === globalIndex;
+
+              return (
+                <div
+                  key={globalIndex}
+                  className="relative overflow-hidden cursor-pointer"
+                  style={{ aspectRatio: '0.72' }}
+                  onMouseEnter={() => setHoveredIndex(globalIndex)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
+                  <AnimatePresence mode="wait">
+                    {!isHovered ? (
+                      /* ── Image face ── */
+                      <motion.div
+                        key="image"
+                        className="absolute inset-0"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.45, ease: 'easeInOut' }}
+                      >
+                        <Image
+                          src={item.image}
+                          alt={item.author}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, 50vw"
+                        />
+                        {/* Bottom gradient */}
+                        <div className="absolute inset-0 bg-linear-to-t from-black/65 via-transparent to-transparent" />
+                        {/* Author label */}
+                        <div className="absolute bottom-0 left-0 right-0 px-7 pb-7">
+                          <p className="text-[0.55rem] uppercase tracking-[0.4em] text-white/45 mb-1.5">
+                            {item.category}
+                          </p>
+                          <p className="text-[0.65rem] uppercase tracking-[0.28em] text-white/85 font-medium">
+                            — {item.author}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ) : (
+                      /* ── Review face ── */
+                      <motion.div
+                        key="review"
+                        className="absolute inset-0 bg-[#f5f3ef] text-[#2c2c2c] flex flex-col justify-center px-8 md:px-10 py-12"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.45, ease: 'easeInOut' }}
+                      >
+                        <p className="text-[0.55rem] uppercase tracking-[0.45em] text-[#2c2c2c]/35 mb-6">
+                          {item.category}
+                        </p>
+
+                        <div
+                          className="text-[3rem] leading-none text-[#2c2c2c]/15 mb-2 -ml-0.5 select-none"
+                          style={{ fontFamily: "'Playfair Display', serif" }}
+                        >
+                          &ldquo;
+                        </div>
+
+                        <p
+                          className="text-sm md:text-base leading-[1.9] text-[#2c2c2c]/70 italic mb-8"
+                          style={{ fontFamily: "'Playfair Display', serif" }}
+                        >
+                          {item.quote}
+                        </p>
+
+                        <div className="w-8 h-px bg-[#2c2c2c]/20 mb-5" />
+
+                        <p className="text-[0.62rem] uppercase tracking-[0.35em] text-[#2c2c2c]/70 font-semibold">
+                          {item.author}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* ── Dots ────────────────────────────────────────────── */}
+      <div className="flex items-center justify-center gap-2 mt-8">
+        {Array.from({ length: totalPairs }).map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            aria-label={`Go to pair ${i + 1}`}
+            className="cursor-pointer"
+          >
+            <span
+              className={`block rounded-full transition-all duration-300 ${
+                i === pairIndex
+                  ? 'w-6 h-0.5 bg-white'
+                  : 'w-1.5 h-1.5 bg-white/25 hover:bg-white/50'
+              }`}
+            />
+          </button>
+        ))}
+      </div>
+
     </section>
   );
 }
+

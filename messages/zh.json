@@ -53,6 +53,9 @@
     "viewMore": "查看更多"
   },
   "NiceWords": {
+    "sectionLabel": "客户故事",
+    "sectionTitle": "美好话语",
+    "storiesLabel": "个故事",
     "testimonials": [
       {
         "category": "美好评语",
@@ -97,6 +100,11 @@
     "mediaKit": "媒体资料包",
     "bookHeading": "预约拍摄",
     "bookSubtitle": "免费开始。随着需求增长添加整个团队。",
+    "ctaLabel": "准备好留住美好记忆了吗？",
+    "ctaHeading": "让我们记录您的故事。",
+    "pagesLabel": "页面",
+    "followLabel": "关注我们",
+    "findUsLabel": "联系我们",
     "bookToday": "立即预约",
     "languageLabel": "中文",
     "terms": "条款与隐私",
