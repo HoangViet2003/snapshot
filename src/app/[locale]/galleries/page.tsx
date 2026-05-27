@@ -1,17 +1,10 @@
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import GalleriesMain from '@/components/GalleriesMain';
-import InstagramFollow from '@/components/InstagramFollow';
+import { redirect } from 'next/navigation';
 
-export default function GalleriesIndexPage() {
-  return (
-    <main className="relative min-h-screen bg-black">
-      <Navbar />
-      <div className="relative">
-        <GalleriesMain />
-      </div>
-      <InstagramFollow />
-      <Footer />
-    </main>
-  );
+export default async function GalleriesIndexPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  redirect(`/${locale}`);
 }
